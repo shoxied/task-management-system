@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet author="Ilia Ternovoi" id="20240824-task-management-system-1-init">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="users">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="user_id_pk"/>
+            </column>
+            <column name="username" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="task">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="task_id_pk"/>
+            </column>
+            <column name="title" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="priority" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="executor_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="task"
+                                 baseColumnNames="author_id"
+                                 constraintName="author_id_fk"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="task"
+                                 baseColumnNames="executor_id"
+                                 constraintName="executor_id_fk"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+
+        <createTable tableName="commentary">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="commentary_id_pk"/>
+            </column>
+            <column name="commentary_body" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="task_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="commentary"
+                                 baseColumnNames="task_id"
+                                 constraintName="task_id_fk"
+                                 referencedTableName="task"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="commentary"
+                                 baseColumnNames="author_id"
+                                 constraintName="author_id_fk"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+</databaseChangeLog>
