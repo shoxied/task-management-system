@@ -1,8 +1,8 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.AuthenticateRequest;
-import org.example.dto.RegisterRequest;
+import org.example.dto.auth.AuthenticateRequest;
+import org.example.dto.auth.RegisterRequest;
 import org.example.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

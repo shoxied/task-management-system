@@ -48,7 +48,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="executor_id" type="int">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="task"

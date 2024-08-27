@@ -1,40 +1,30 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.RegisterRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.example.dto.auth.RegisterRequest;
 import org.example.entity.User;
 import org.example.repo.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, @Qualifier("cryptPasswordEncoder") PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    public Optional<User> getUserByUserName(String username) {
-        return userRepository.findByUsername(username);
-    }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return getUserByUserName(username).orElseThrow(() -> new UsernameNotFoundException(String.format("User with username '%s' not found", username)));
+        return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(String.format("User with username '%s' not found", username)));
     }
 
     public User register(RegisterRequest request) {
@@ -44,6 +34,7 @@ public class UserService implements UserDetailsService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role("user")
                 .build();
+        log.info("user {} with email {} have registered", request.getUsername(), request.getEmail());
         return userRepository.save(user);
     }
 }

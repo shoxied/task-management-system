@@ -32,16 +32,25 @@ public class SecurityConfiguration {
     private final UserService userService;
     private final JwtAuthenticationFilter jwtAuthFilter;
 
+    private static final String[] AUTH_WHITELIST = {
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/api/v1/auth/**"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/api/v1/auth/**")
+                        .requestMatchers(AUTH_WHITELIST)
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/task/**")
-                        .hasAuthority("user"))
+                        .requestMatchers(HttpMethod.POST, "/api/v1/task/create-task").hasAuthority("user")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/task/set-executor").hasAuthority("user"))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
