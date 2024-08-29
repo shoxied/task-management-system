@@ -1,6 +1,5 @@
 package org.example.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,11 +32,13 @@ public class Task {
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id", nullable = false)
-    private User author_id;
+    private User author;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToMany
+    @OneToOne
     @JoinColumn(name = "executor_id")
-    private User executor_id;
+    private User executor;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Commentary> commentaries = new ArrayList<>();

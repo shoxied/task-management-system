@@ -20,7 +20,7 @@ public class ResponseTaskDto {
     private String description;
     private String status;
     private String priority;
-    private UserDto author_id;
-    private UserDto executor_id;
+    private UserDto author;
+    private UserDto executor;
     private List<Commentary> commentaries = new ArrayList<>();
 }

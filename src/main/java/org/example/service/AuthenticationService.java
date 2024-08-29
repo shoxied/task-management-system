@@ -5,7 +5,7 @@ import org.example.dto.auth.AuthenticateRequest;
 import org.example.dto.auth.RegisterRequest;
 import org.example.dto.auth.UserDto;
 import org.example.entity.User;
-import org.example.exception.AuthError;
+import org.example.exception.ApplicationError;
 import org.example.repo.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +28,7 @@ public class AuthenticationService {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(new AuthError(HttpStatus.UNAUTHORIZED.value(), "incorrect login or password"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new ApplicationError(HttpStatus.UNAUTHORIZED.value(), "incorrect login or password"), HttpStatus.UNAUTHORIZED);
         }
         UserDetails userDetails = userService.loadUserByUsername(request.getUsername());
         String token = jwtService.generateToken(userDetails);
@@ -37,7 +37,7 @@ public class AuthenticationService {
 
     public ResponseEntity<?> register(RegisterRequest request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            return new ResponseEntity<>(new AuthError(HttpStatus.BAD_REQUEST.value(), "the user with the specified name already exists"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApplicationError(HttpStatus.BAD_REQUEST.value(), "the user with the specified name already exists"), HttpStatus.BAD_REQUEST);
         }
         User user = userService.register(request);
         return ResponseEntity.ok(new UserDto(user.getId(), user.getUsername(), user.getEmail()));

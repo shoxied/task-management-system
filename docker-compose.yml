@@ -1,8 +1,8 @@
-version: "1.0"
+version: "3.7"
 services:
   postgres:
     image: postgres:11
-    container_name: postgres
+    container_name: taskdb
     hostname: postgres
     restart: always
     environment:
