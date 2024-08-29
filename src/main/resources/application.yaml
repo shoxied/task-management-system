@@ -1,5 +1,9 @@
 server:
   port: 8180
+  error:
+    include-message: always
+    include-stacktrace: on_param
+    include-binding-errors: always
 jwt:
   secret: 2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892
   lifetime: 180m
@@ -8,7 +12,7 @@ spring:
     name: task-management-system
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:15432/task
+    url: jdbc:postgresql://localhost:5432/task
     username: task
     password: task
     type: com.zaxxer.hikari.HikariDataSource

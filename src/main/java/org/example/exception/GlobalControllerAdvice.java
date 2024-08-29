@@ -6,6 +6,7 @@ import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,9 +22,14 @@ public class GlobalControllerAdvice {
 
     private final ErrorAttributes errorAttributes;
 
-    @ExceptionHandler({MissingPathVariableException.class})
-    public ResponseEntity<Object> handleConstraintViolationException(WebRequest request) {
+    @ExceptionHandler({TaskNotFoundException.class})
+    public ResponseEntity<Object> handleTaskNotFoundException(WebRequest request) {
         return new ResponseEntity<>(getStringObjectMap(request), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({UsernameNotFoundException.class})
+    public ResponseEntity<Object> handleUsernameNotFoundException(WebRequest request) {
+        return new ResponseEntity<>(getStringObjectMap(request), HttpStatus.NOT_FOUND);
     }
 
     private Map<String, Object> getStringObjectMap(WebRequest request) {
