@@ -1,8 +1,10 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.example.dto.auth.AuthenticateRequest;
 import org.example.dto.auth.RegisterRequest;
+import org.example.dto.auth.UserDto;
 import org.example.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +25,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+    public UserDto register(@RequestBody RegisterRequest request) throws BadRequestException {
         return authenticationService.register(request);
     }
 }

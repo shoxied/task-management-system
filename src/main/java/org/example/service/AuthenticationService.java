@@ -1,13 +1,12 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.example.dto.auth.AuthenticateRequest;
 import org.example.dto.auth.RegisterRequest;
 import org.example.dto.auth.UserDto;
 import org.example.entity.User;
-import org.example.exception.ApplicationError;
 import org.example.repo.UserRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -28,18 +27,18 @@ public class AuthenticationService {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(new ApplicationError(HttpStatus.UNAUTHORIZED.value(), "incorrect login or password"), HttpStatus.UNAUTHORIZED);
+            throw new BadCredentialsException("incorrect login or password");
         }
         UserDetails userDetails = userService.loadUserByUsername(request.getUsername());
         String token = jwtService.generateToken(userDetails);
         return ResponseEntity.ok(token);
     }
 
-    public ResponseEntity<?> register(RegisterRequest request) {
+    public UserDto register(RegisterRequest request) throws BadRequestException {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            return new ResponseEntity<>(new ApplicationError(HttpStatus.BAD_REQUEST.value(), "the user with the specified name already exists"), HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("the user with the specified name already exists");
         }
         User user = userService.register(request);
-        return ResponseEntity.ok(new UserDto(user.getId(), user.getUsername(), user.getEmail()));
+        return new UserDto(user.getId(), user.getUsername(), user.getEmail());
     }
 }

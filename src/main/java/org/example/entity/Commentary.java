@@ -1,5 +1,6 @@
 package org.example.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,7 +20,7 @@ public class Commentary {
     private String commentary_body;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "task_id", nullable = false)
+    @JsonIgnore
     private Task task;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)

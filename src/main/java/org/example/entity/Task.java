@@ -35,8 +35,6 @@ public class Task {
     private User author;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @ManyToMany
-    @OneToOne
     @JoinColumn(name = "executor_id")
     private User executor;
 

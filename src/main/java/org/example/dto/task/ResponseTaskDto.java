@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.dto.CommentaryDto;
 import org.example.dto.auth.UserDto;
 import org.example.entity.Commentary;
 
@@ -22,5 +23,5 @@ public class ResponseTaskDto {
     private String priority;
     private UserDto author;
     private UserDto executor;
-    private List<Commentary> commentaries = new ArrayList<>();
+    private List<CommentaryDto> commentaries = new ArrayList<>();
 }
